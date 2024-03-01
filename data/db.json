@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    {
+      "id": "49",
+      "title": "first task",
+      "isFav": false
+    },
+    {
+      "id": "2285",
+      "title": "second task",
+      "isFav": true
+    }
+  ]
+}
