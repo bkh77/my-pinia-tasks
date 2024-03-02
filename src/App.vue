@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import TaskForm from '@/components/TaskForm.vue'
 import TaskDetailes from '@/components/TaskDetailes.vue'
 import { useTaskStore } from '@/stores/taskStore'
-import { ref } from 'vue'
+import TaskForm from '@/components/TaskForm.vue'
 import type { filterType } from '@/types/task'
+import { ref } from 'vue'
 
 const store = useTaskStore()
 const filter = ref<filterType>('all')
@@ -61,21 +61,19 @@ store.getTasks()
 
     <section v-show="filter === 'fav'">
       <p class="my-4">You have {{ store.favCount }} favs left to do</p>
-      <TransitionGroup name="list" tag="div">
-        <div v-for="task in store.favs" :key="task.id">
+      <TransitionGroup name="list" tag="ul">
+        <li v-for="task in store.favs" :key="task.id">
           <TaskDetailes :task="task" />
-        </div>
+        </li>
       </TransitionGroup>
     </section>
 
-    <Transition>
-      <div
-        class="text-5xl font-bold text-center my-12 text-gray-300"
-        v-if="!store.tasks.length"
-      >
-        Empty
-      </div>
-    </Transition>
+    <div
+      class="text-5xl font-bold text-center my-12 text-gray-300"
+      v-if="!store.tasks.length"
+    >
+      Empty
+    </div>
   </main>
 </template>
 

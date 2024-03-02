@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue'
-import type { Task } from '@/types/task'
 import { useTaskStore } from '@/stores/taskStore'
+import type { Task } from '@/types/task'
+import { defineProps } from 'vue'
 
 const { deleteTask, toggleFav } = useTaskStore()
 

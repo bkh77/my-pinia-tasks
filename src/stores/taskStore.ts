@@ -7,6 +7,10 @@ export const useTaskStore = defineStore('taskStore', () => {
   const tasks = ref<Task[]>([])
   const loading = ref(false)
 
+  const saveToLocalStorage = () => {
+    localStorage.setItem('tasks', JSON.stringify(tasks.value))
+  }
+
   // getters
   const favs = computed(() => {
     return tasks.value.filter((t) => t.isFav)
@@ -23,12 +27,11 @@ export const useTaskStore = defineStore('taskStore', () => {
   // actions
   const getTasks = async () => {
     try {
-      loading.value = true
-      const res = await fetch('http://localhost:3000/tasks')
-      const data = await res.json()
+      const savedTasks = await JSON.parse(localStorage.getItem('tasks') || '')
 
-      tasks.value = data
-      loading.value = false
+      if (savedTasks) {
+        tasks.value = savedTasks
+      }
     } catch (error) {
       console.log(error)
     }
@@ -37,11 +40,7 @@ export const useTaskStore = defineStore('taskStore', () => {
   const addTask = async (task: Task) => {
     try {
       tasks.value.push(task)
-      await fetch('http://localhost:3000/tasks', {
-        method: 'POST',
-        body: JSON.stringify(task),
-        headers: { 'Content-Type': 'application/json' },
-      })
+      saveToLocalStorage()
     } catch (error) {
       console.log(error)
     }
@@ -49,10 +48,7 @@ export const useTaskStore = defineStore('taskStore', () => {
   const deleteTask = async (id: string) => {
     try {
       tasks.value = tasks.value.filter((t) => t.id !== id)
-
-      await fetch('http://localhost:3000/tasks/' + id, {
-        method: 'DELETE',
-      })
+      saveToLocalStorage()
     } catch (error) {
       console.log(error)
     }
@@ -67,12 +63,7 @@ export const useTaskStore = defineStore('taskStore', () => {
         }
         return false
       })
-
-      await fetch('http://localhost:3000/tasks/' + id, {
-        method: 'PATCH',
-        body: JSON.stringify({ isFav: task?.isFav }),
-        headers: { 'Content-Type': 'application/json' },
-      })
+      saveToLocalStorage()
     } catch (error) {
       console.log(error)
     }
